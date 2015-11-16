@@ -1,0 +1,27 @@
+{
+  "name": "osm/easy-rest-bundle",
+  "type": "symfony-bundle",
+  "description": "Osm Easy Rest Bundle",
+  "keywords": [
+    "rest"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Osman Ungur",
+      "email": "osmanungur@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "symfony/dependency-injection": "~2.3|3.*",
+    "symfony/config": "~2.3|3.*"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Osm\\EasyRestBundle\\": ""
+    }
+  }
+}
