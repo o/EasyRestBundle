@@ -7,7 +7,7 @@ use Osm\EasyRestBundle\Utility\ExceptionWrapper;
 use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\FlattenException;
+use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 class ExceptionController extends BaseExceptionController
