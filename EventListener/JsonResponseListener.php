@@ -2,7 +2,6 @@
 
 namespace Osm\EasyRestBundle\EventListener;
 
-
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 

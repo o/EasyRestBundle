@@ -21,8 +21,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder
             ->root('osm_easy_rest')
             ->children()
-                ->booleanNode('enable_listeners')->defaultTrue()->end()
-                ->booleanNode('enable_exception_controller')->defaultTrue()->end()
+            ->booleanNode('enable_listeners')->defaultTrue()->end()
+            ->booleanNode('enable_exception_controller')->defaultTrue()->end()
             ->end();
 
         return $treeBuilder;

@@ -2,7 +2,6 @@
 
 namespace Osm\EasyRestBundle\Utility;
 
-
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -22,7 +21,7 @@ class ExceptionWrapper
     /**
      * @var array
      */
-    protected $errors = array();
+    protected $errors = [];
 
     /**
      * @var int
@@ -32,7 +31,7 @@ class ExceptionWrapper
     /**
      * @var array
      */
-    protected $trace = array();
+    protected $trace = [];
 
     /**
      * @param $code
@@ -89,6 +88,12 @@ class ExceptionWrapper
         return $this;
     }
 
+    /**
+     * Helper method for creating list of validation errors from ConstraintViolationList
+     *
+     * @param ConstraintViolationListInterface $errors
+     * @return $this
+     */
     public function setErrorsFromConstraintViolations(ConstraintViolationListInterface $errors)
     {
         $this->errors = [];
@@ -102,23 +107,33 @@ class ExceptionWrapper
         return $this;
     }
 
+    /**
+     * Adds an error
+     *
+     * @param $path
+     * @param $message
+     * @return $this
+     */
     public function addError($path, $message)
     {
         if (strpos($path, '[') !== false) {
             $path = substr($path, 1, -1);
         }
+
         array_push(
             $this->errors,
-            array(
+            [
                 'path' => $path,
                 'message' => $message,
-            )
+            ]
         );
 
         return $this;
     }
 
     /**
+     * Returns translated name of status code
+     *
      * @return string
      */
     private function getStatusTextFromCode()
@@ -130,6 +145,11 @@ class ExceptionWrapper
         return '';
     }
 
+    /**
+     * Creates a response
+     *
+     * @return JsonResponse
+     */
     public function getResponse()
     {
         return new JsonResponse(

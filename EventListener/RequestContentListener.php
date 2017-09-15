@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class RequestContentListener
 {
+
     /**
      * @param GetResponseEvent $event
      * @return bool
