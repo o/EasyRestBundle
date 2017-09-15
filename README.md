@@ -1,3 +1,20 @@
+Easy Rest Bundle
+================
+
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/36bd3d18-16b1-4cf2-8f58-53d940f67bf1/small.png)](https://insight.sensiolabs.com/projects/36bd3d18-16b1-4cf2-8f58-53d940f67bf1)
+
+Simple and lightweight bundle provides JSON based request / response and exception handling support to develop RESTful API's with Symfony.
+
+Features include:
+
+* Listener for accessing JSON request body from Request class as an array
+* Listener for creating JSON Response which is converts array response to JSON
+    * Automatically determines correct HTTP status codes for DELETE and POST response
+* Exception controller for providing error details 
+    * Supports Symfony Validation errors
+    * Provides stack-trace on development environment
+* Supports Symfony 2 and 3
+
 Installation
 ============
 
@@ -57,3 +74,7 @@ change this behaviour with following parameters:
         enable_listeners: false
         enable_exception_controller: true
 
+License
+-------
+
+This bundle is distributed under the MIT license. See the complete license in the bundle.
