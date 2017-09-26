@@ -1,7 +1,7 @@
 {
   "name": "osm/easy-rest-bundle",
   "type": "symfony-bundle",
-  "description": "Osm Easy Rest Bundle",
+  "description": "Simple and lightweight bundle provides JSON based request / response and exception handling support to develop RESTful API's with Symfony.",
   "keywords": [
     "rest"
   ],
