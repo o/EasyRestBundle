@@ -2,7 +2,7 @@
 
 namespace Osm\EasyRestBundle\Controller;
 
-use AppBundle\Exception\ValidationException;
+use Osm\EasyRestBundle\Exception\ValidationException;
 use Osm\EasyRestBundle\Utility\ExceptionWrapper;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
