@@ -1,0 +1,5 @@
+services:
+    osm_easy_rest.listener.request_body_listener:
+        class: Osm\EasyRestBundle\EventListener\RequestContentListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }

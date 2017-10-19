@@ -5,8 +5,14 @@ namespace Osm\EasyRestBundle\EventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
+/**
+ * Listener for converting controller response to JsonResponse
+ *
+ * @package Osm\EasyRestBundle\EventListener
+ */
 class JsonResponseListener
 {
+
     /**
      * @param GetResponseForControllerResultEvent $event
      */
@@ -27,6 +33,10 @@ class JsonResponseListener
                 break;
         }
 
-        $event->setResponse(new JsonResponse($result, $statusCode));
+        $jsonResponse = new JsonResponse();
+        $jsonResponse->setStatusCode($statusCode);
+        $jsonResponse->setData($result);
+
+        $event->setResponse($jsonResponse);
     }
 }

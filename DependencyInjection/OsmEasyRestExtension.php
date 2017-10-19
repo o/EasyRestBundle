@@ -23,17 +23,23 @@ class OsmEasyRestExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
 
-        if ($config['enable_listeners']) {
-            $loader->load('listeners.yml');
+        if ($config['enable_exception_listener']) {
+            $loader->load('exception_listener.yml');
         }
 
-        if ($config['enable_exception_controller']) {
-            $container->setParameter(
-                'twig.exception_listener.controller',
-                'osm_easy_rest.controller.exception_controller:showAction'
-            );
+        if ($config['enable_json_param_converter']) {
+            $loader->load('json_param_converter.yml');
+        }
+
+        if ($config['enable_json_response_listener']) {
+            $loader->load('json_response_listener.yml');
+        }
+
+        if ($config['enable_request_body_listener']) {
+            $loader->load('request_body_listener.yml');
         }
     }
 }
+
+

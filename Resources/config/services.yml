@@ -1,7 +1,0 @@
-services:
-    osm_easy_rest.utility.exception_wrapper:
-        class: Osm\EasyRestBundle\Utility\ExceptionWrapper
-
-    osm_easy_rest.controller.exception_controller:
-        class:      Osm\EasyRestBundle\Controller\ExceptionController
-        arguments : ['@twig', '%kernel.debug%']

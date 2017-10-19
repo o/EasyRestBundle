@@ -1,0 +1,11 @@
+services:
+    osm_easy_rest.controller.exception_controller:
+        class:      Osm\EasyRestBundle\Controller\ExceptionController
+        arguments : ['%kernel.debug%']
+
+    osm_easy_rest.exception_listener:
+        class: Osm\EasyRestBundle\EventListener\ExceptionListener
+        arguments: ['osm_easy_rest.controller.exception_controller:showAction', '@?logger']
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, priority: -100 }
+            - { name: monolog.logger, channel: request }

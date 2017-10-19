@@ -1,0 +1,5 @@
+services:
+    osm_easy_rest.listener.json_response_listener :
+        class: Osm\EasyRestBundle\EventListener\JsonResponseListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.view }

@@ -6,7 +6,12 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class RequestContentListener
+/**
+ * Listener for mapping json request body to Request object
+ *
+ * @package Osm\EasyRestBundle\EventListener
+ */
+class RequestBodyListener
 {
 
     /**

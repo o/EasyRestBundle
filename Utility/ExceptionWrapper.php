@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class ExceptionWrapper
+class ExceptionWrapper implements \JsonSerializable
 {
     /**
      * @var int
@@ -26,12 +26,17 @@ class ExceptionWrapper
     /**
      * @var int
      */
-    protected $statusCode = Response::HTTP_NOT_FOUND;
+    protected $statusCode = Response::HTTP_I_AM_A_TEAPOT;
 
     /**
      * @var array
      */
     protected $trace = [];
+
+    /**
+     * @var array
+     */
+    protected $headers = [];
 
     /**
      * @param $code
@@ -86,6 +91,14 @@ class ExceptionWrapper
         $this->trace = $trace;
 
         return $this;
+    }
+
+    /**
+     * @param array $headers
+     */
+    public function setHeaders(array $headers)
+    {
+        $this->headers = $headers;
     }
 
     /**
@@ -153,15 +166,28 @@ class ExceptionWrapper
     public function getResponse()
     {
         return new JsonResponse(
-            array(
-                'status_code' => $this->statusCode,
-                'status_text' => $this->getStatusTextFromCode(),
-                'code' => $this->code,
-                'message' => $this->message,
-                'errors' => $this->errors,
-                'trace' => $this->trace,
-            ),
-            $this->statusCode
+            $this->jsonSerialize(),
+            $this->statusCode,
+            $this->headers
         );
     }
+
+    /**
+     * Returns an array to represent error
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'status_code' => $this->statusCode,
+            'status_text' => $this->getStatusTextFromCode(),
+            'code' => $this->code,
+            'message' => $this->message,
+            'errors' => $this->errors,
+            'trace' => $this->trace,
+        ];
+    }
+
+
 }

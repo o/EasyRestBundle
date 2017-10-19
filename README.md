@@ -7,7 +7,9 @@ Simple and lightweight bundle provides JSON based request / response and excepti
 
 Features include:
 
+
 * Listener for decoding JSON request body and accessing it from Request class
+* `ParamConverter` for mapping JSON request to plain PHP object (using Symfony Serializer)
 * Listener for creating JSON responses which is converts to JSON
     * Automatically determines correct HTTP status codes for DELETE and POST response
 * Exception controller for providing error details 
@@ -18,7 +20,6 @@ Features include:
 
 Not supports:
 
-* Symfony Serializer support (Planned for next major release)
 * XML serializer or format agnostic helpers
 * Header format negotiation
 
@@ -28,7 +29,7 @@ Usage
 JSON Request and Response
 ----------------------------------------
 
-Responses are handled by `JsonResponseListener` listener. It's directly uses Symfony `JsonResponse` class for creating response. 
+Responses are handled by `JsonResponseListener` listener. It's directly uses Symfony `JsonResponse` class for creating response. Simply you can use arrays or `JsonSerializable` objects. 
 
 GET request and response:
 
@@ -98,6 +99,7 @@ In controller you can access parameters like:
         ....
     }
 
+##### TODO: Using JsonParamConverter
 
 Working with exceptions and validation errors
 ------------------------------------------------------------
@@ -302,12 +304,14 @@ Enable the bundle's configuration in `app/config/config.yml`:
 
     osm_easy_rest: ~
 
-With default configuration, listeners and exception controller will be enabled. You can
-change this behaviour with following parameters:
+With default configuration, all listeners and exception controller will be enabled. You can
+change this behaviour with following options:
 
     osm_easy_rest:
-        enable_listeners: false
-        enable_exception_controller: true
+        enable_exception_listener: true
+        enable_json_param_converter: false
+        enable_json_response_listener: true
+        enable_request_body_listener: true
 
 License
 -------
