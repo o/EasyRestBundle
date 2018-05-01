@@ -2,6 +2,7 @@ services:
     osm_easy_rest.controller.exception_controller:
         class:      Osm\EasyRestBundle\Controller\ExceptionController
         arguments : ['%kernel.debug%']
+        public: true
 
     osm_easy_rest.exception_listener:
         class: Osm\EasyRestBundle\EventListener\ExceptionListener
