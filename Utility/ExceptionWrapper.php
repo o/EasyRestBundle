@@ -26,7 +26,7 @@ class ExceptionWrapper implements \JsonSerializable
     /**
      * @var int
      */
-    protected $statusCode = Response::HTTP_I_AM_A_TEAPOT;
+    protected $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
 
     /**
      * @var array
