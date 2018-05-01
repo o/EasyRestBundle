@@ -23,22 +23,83 @@ Not supports:
 * XML serializer or format agnostic helpers
 * Header format negotiation
 
+Installation
+============
+
+Step 1: Download the Bundle
+---------------------------
+
+Open a command console, enter your project directory and execute the
+following command to download the latest stable version of this bundle:
+
+    $ composer require osm/easy-rest-bundle "~1"
+
+This command requires you to have Composer installed globally, as explained
+in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
+of the Composer documentation.
+
+Step 2: Enable the Bundle
+-------------------------
+
+Then, enable the bundle by adding it to the list of registered bundles
+in the `app/AppKernel.php` file of your project:
+
+    <?php
+    // app/AppKernel.php
+
+    // ...
+    class AppKernel extends Kernel
+    {
+        public function registerBundles()
+        {
+            $bundles = array(
+                // ...
+
+                new Osm\EasyRestBundle\OsmEasyRestBundle(),
+            );
+
+            // ...
+        }
+
+        // ...
+    }
+
+
+Step 3: Configuration
+---------------------
+
+Enable the bundle's configuration in `app/config/config.yml`:
+
+    osm_easy_rest: ~
+
+With default configuration, all listeners and exception controller will be enabled. You can
+change this behaviour with following options:
+
+    osm_easy_rest:
+        enable_exception_listener: true
+        enable_json_param_converter: false
+        enable_json_response_listener: true
+        enable_request_body_listener: true
+
 Usage
 ============
 
 JSON Request and Response
 ----------------------------------------
 
+### Response
+
 Responses are handled by `JsonResponseListener` listener. It's directly uses Symfony `JsonResponse` class for creating response. Simply you can use arrays or `JsonSerializable` objects. 
 
 GET request and response:
 
-    curl -i localhost:8000/user/12/details
+    curl -i localhost:8000/v1/users/12/details
 
 Controller
 
     /**
-     * @Route("/user/12/details")
+     * @Method({"GET"})
+     * @Route("/v1/users/12/details")
      */
     public function getUserDetailsSample()
     {
@@ -73,7 +134,10 @@ Response will be,
             "username": "o"
         }
     }
-    
+
+
+### Request
+
 Requests are handled by `RequestContentListener`, it tries to convert request body to array and wraps in `ParameterBag`. It's only activated for `POST`, `PUT` and `PATCH` requests. So, you can access to this parameters from Symfony Request object.
 
 POST request example with JSON body:    
@@ -93,13 +157,68 @@ In controller you can access parameters like:
      * @Route("/access-tokens")
      */
     public function createTokenAction(Request $request) {
-        $username = $request->request->get('username'); // You will get 'o'
-        $password = $request->request->get('password'); // You will get 't0o53cur#'
+        $username = $request->request->get('username'); // Will produce 'o'
+        $password = $request->request->get('password'); // Will produce 't0o53cur#'
         
         ....
     }
 
-##### TODO: Using JsonParamConverter
+### Json Param Converter
+
+You can also use PHP objects for mapping and validating request. Your request object should implement `JsonRequestInterface` interface. 
+
+    use Osm\EasyRestBundle\ParamConverter\JsonRequestInterface;
+    use Symfony\Component\Validator\Constraints as Assert;
+    
+    class CreateTokenRequest implements JsonRequestInterface
+    {
+    
+        /**
+         * @Assert\NotBlank()
+         */
+        private $username;
+    
+        /**
+         * @Assert\NotBlank()
+         * @Assert\Regex("/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W])/", message="Your password should contain a digit, a lowercase, an uppercase and a special character.")
+         * @Assert\Length(min="8")
+         */
+        private $password;
+    
+        // Getter / setters removed for brevity
+    
+    }
+
+Accessing and validating from controller: 
+
+POST request example with JSON body:    
+
+    curl -i -X POST \
+      http://localhost:8000/access-tokens \
+      -H 'content-type: application/json' \
+      -d '{
+    	"username": "o",
+    	"password": "t0o53cur#",
+    }'
+
+A param converter directly unmarshalls JSON request to your object.
+
+    /**
+     * @Route()
+     * @Method("POST")
+     * @throws ValidationException
+     */
+    public function createTokenAction(CreateTokenRequest $createTokenRequest, ValidatorInterface $validator)
+    {
+        $errors = $validator->validate($createTokenRequest);
+
+        if (count($errors)) {
+            throw new ValidationException($errors);
+        }
+
+        $createTokenRequest->getUsername(); // Will produce 'o'
+        $createTokenRequest->getPassword(); // Will produce 't0o53cur#'
+    }
 
 Working with exceptions and validation errors
 ------------------------------------------------------------
@@ -255,65 +374,7 @@ You will expect a response with this structure
     }
 
 
-Installation
-============
-
-Step 1: Download the Bundle
----------------------------
-
-Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
-
-    $ composer require osm/easy-rest-bundle "~1"
-
-This command requires you to have Composer installed globally, as explained
-in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
-of the Composer documentation.
-
-Step 2: Enable the Bundle
--------------------------
-
-Then, enable the bundle by adding it to the list of registered bundles
-in the `app/AppKernel.php` file of your project:
-
-    <?php
-    // app/AppKernel.php
-
-    // ...
-    class AppKernel extends Kernel
-    {
-        public function registerBundles()
-        {
-            $bundles = array(
-                // ...
-
-                new Osm\EasyRestBundle\OsmEasyRestBundle(),
-            );
-
-            // ...
-        }
-
-        // ...
-    }
-
-
-Step 3: Configuration
----------------------
-
-Enable the bundle's configuration in `app/config/config.yml`:
-
-    osm_easy_rest: ~
-
-With default configuration, all listeners and exception controller will be enabled. You can
-change this behaviour with following options:
-
-    osm_easy_rest:
-        enable_exception_listener: true
-        enable_json_param_converter: false
-        enable_json_response_listener: true
-        enable_request_body_listener: true
-
 License
 -------
 
-This bundle is distributed under the MIT license. See the complete license in the bundle.
+This bundle is distributed under the MIT license. Copyright (c) 2018 Osman Üngür.
