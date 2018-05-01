@@ -189,5 +189,4 @@ class ExceptionWrapper implements \JsonSerializable
         ];
     }
 
-
 }
