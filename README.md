@@ -377,4 +377,6 @@ You will expect a response with this structure
 License
 -------
 
-This bundle is distributed under the MIT license. Copyright (c) 2018 Osman Üngür.
+This bundle is distributed under the MIT license.
+Copyright (c) 2015-2018 Osman Ungur
+
