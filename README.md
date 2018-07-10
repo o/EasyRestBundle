@@ -10,6 +10,7 @@ Features include:
 
 * Listener for decoding JSON request body and accessing it from Request class
 * `ParamConverter` for mapping JSON request to plain PHP object (using Symfony Serializer)
+* (New in 1.3.0) Supports nested objects and arrays using PHPDoc hints
 * Listener for creating JSON responses which is converts to JSON
     * Automatically determines correct HTTP status codes for DELETE and POST response
 * Exception controller for providing error details 
@@ -17,7 +18,7 @@ Features include:
     * Provides stack-trace on development environment
 * Supports Symfony 2 and 3
 * Only uses plain listeners, easy to configure and disable certain features.
-
+ 
 Not supports:
 
 * XML serializer or format agnostic helpers
