@@ -4,9 +4,17 @@
 namespace Osm\EasyRestBundle\ParamConverter;
 
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 
@@ -22,15 +30,20 @@ class JsonParamConverter implements ParamConverterInterface
 
     /**
      * JsonParamConverter constructor.
-     * @param SerializerInterface $serializer
      */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct()
     {
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $serializer = new Serializer(
+            [new ArrayDenormalizer(), new ObjectNormalizer($classMetadataFactory, null, null, new PhpDocExtractor())],
+            [new JsonEncoder()]
+        );
         $this->serializer = $serializer;
     }
 
+
     /**
-     * @param Request        $request
+     * @param Request $request
      * @param ParamConverter $configuration
      * @return void
      */

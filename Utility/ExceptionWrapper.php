@@ -129,10 +129,6 @@ class ExceptionWrapper implements \JsonSerializable
      */
     public function addError($path, $message)
     {
-        if (strpos($path, '[') !== false) {
-            $path = substr($path, 1, -1);
-        }
-
         array_push(
             $this->errors,
             [
