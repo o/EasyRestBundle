@@ -24,6 +24,8 @@ class OsmEasyRestExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
+        $loader->load('rest_serializer.yml');
+
         if ($config['enable_exception_listener']) {
             $loader->load('exception_listener.yml');
         }

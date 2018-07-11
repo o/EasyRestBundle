@@ -2,7 +2,7 @@
 
 namespace Osm\EasyRestBundle\EventListener;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -18,17 +18,22 @@ class RequestBodyListener
      * @param GetResponseEvent $event
      * @return bool
      * @throws BadRequestHttpException
+     * @throws \LogicException
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
         $method = $request->getMethod();
 
-        if (count($request->request->all())) {
+        if (\count($request->request->all())) {
             return false;
         }
 
-        if (!in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+        if (!\in_array(
+            $method,
+            [Request::METHOD_POST, Request::METHOD_PUT, Request::METHOD_PATCH, Request::METHOD_DELETE],
+            true
+        )) {
             return false;
         }
 
@@ -39,8 +44,8 @@ class RequestBodyListener
         }
 
         $data = json_decode($content, true);
-        if (is_array($data)) {
-            $request->request = new ParameterBag($data);
+        if (\is_array($data)) {
+            $request->request->replace($data);
         } else {
             throw new BadRequestHttpException('Unexpected JSON request');
         }

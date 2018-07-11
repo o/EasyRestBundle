@@ -24,7 +24,7 @@ class ExceptionListener extends HttpKernelExceptionListener
             'logger' => $this->logger instanceof DebugLoggerInterface ? $this->logger : null,
         );
         $request = $request->duplicate(null, null, $attributes);
-        $request->setMethod('GET');
+        $request->setMethod(Request::METHOD_GET);
 
         return $request;
     }

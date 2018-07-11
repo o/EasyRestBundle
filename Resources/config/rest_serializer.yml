@@ -1,0 +1,4 @@
+services:
+    osm_easy_rest.json_serializer:
+        factory: ['Osm\EasyRestBundle\Serializer\JsonSerializerFactory', factory]
+        class: Symfony\Component\Serializer\Serializer

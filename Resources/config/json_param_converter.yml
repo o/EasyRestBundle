@@ -1,5 +1,6 @@
 services:
     osm_easy_rest.converter.json_param_converter:
         class: Osm\EasyRestBundle\ParamConverter\JsonParamConverter
+        arguments: ['@osm_easy_rest.json_serializer']
         tags:
           - { name: request.param_converter, priority: -2, converter: json_request_param_converter }

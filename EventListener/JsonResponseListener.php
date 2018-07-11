@@ -2,8 +2,12 @@
 
 namespace Osm\EasyRestBundle\EventListener;
 
+use Osm\EasyRestBundle\Serializer\JsonSerializerFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Listener for converting controller response to JsonResponse
@@ -14,6 +18,21 @@ class JsonResponseListener
 {
 
     /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * JsonResponseListener constructor.
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+
+    /**
      * @param GetResponseForControllerResultEvent $event
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
@@ -22,21 +41,18 @@ class JsonResponseListener
         $method = $event->getRequest()->getMethod();
 
         switch ($method) {
-            case 'POST':
-                $statusCode = 201;
+            case Request::METHOD_POST:
+                $statusCode = Response::HTTP_CREATED;
                 break;
-            case 'DELETE':
-                $statusCode = 204;
+            case Request::METHOD_DELETE:
+                $statusCode = Response::HTTP_NO_CONTENT;
                 break;
             default:
-                $statusCode = 200;
+                $statusCode = Response::HTTP_OK;
                 break;
         }
 
-        $jsonResponse = new JsonResponse();
-        $jsonResponse->setStatusCode($statusCode);
-        $jsonResponse->setData($result);
-
-        $event->setResponse($jsonResponse);
+        $body = $this->serializer->serialize($result, JsonSerializerFactory::FORMAT);
+        $event->setResponse(JsonResponse::fromJsonString($body, $statusCode));
     }
 }

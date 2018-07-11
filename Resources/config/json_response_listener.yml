@@ -1,5 +1,6 @@
 services:
     osm_easy_rest.listener.json_response_listener :
         class: Osm\EasyRestBundle\EventListener\JsonResponseListener
+        arguments: ['@osm_easy_rest.json_serializer']
         tags:
             - { name: kernel.event_listener, event: kernel.view }
