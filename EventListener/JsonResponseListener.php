@@ -2,12 +2,11 @@
 
 namespace Osm\EasyRestBundle\EventListener;
 
-use Osm\EasyRestBundle\Serializer\JsonSerializerFactory;
+use Osm\EasyRestBundle\Serializer\RestJsonSerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Listener for converting controller response to JsonResponse
@@ -18,22 +17,22 @@ class JsonResponseListener
 {
 
     /**
-     * @var SerializerInterface
+     * @var RestJsonSerializer
      */
     private $serializer;
 
     /**
      * JsonResponseListener constructor.
-     * @param SerializerInterface $serializer
+     * @param RestJsonSerializer $serializer
      */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(RestJsonSerializer $serializer)
     {
         $this->serializer = $serializer;
     }
 
-
     /**
      * @param GetResponseForControllerResultEvent $event
+     * @throws \Symfony\Component\Serializer\Exception\NotEncodableValueException
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
@@ -52,7 +51,8 @@ class JsonResponseListener
                 break;
         }
 
-        $body = $this->serializer->serialize($result, JsonSerializerFactory::FORMAT);
+        $body = $this->serializer->serialize($result);
+
         $event->setResponse(JsonResponse::fromJsonString($body, $statusCode));
     }
 }

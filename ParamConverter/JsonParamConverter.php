@@ -4,10 +4,10 @@
 namespace Osm\EasyRestBundle\ParamConverter;
 
 
+use Osm\EasyRestBundle\Serializer\RestJsonSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\SerializerInterface;
 
 
 class JsonParamConverter implements ParamConverterInterface
@@ -16,35 +16,31 @@ class JsonParamConverter implements ParamConverterInterface
     const FORMAT = 'json';
 
     /**
-     * @var SerializerInterface $serializer
+     * @var RestJsonSerializer $serializer
      */
     private $serializer;
 
     /**
      * JsonParamConverter constructor.
-     * @param SerializerInterface $serializer
+     * @param RestJsonSerializer $serializer
      */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(RestJsonSerializer $serializer)
     {
         $this->serializer = $serializer;
     }
-
 
     /**
      * @param Request        $request
      * @param ParamConverter $configuration
      * @return void
      * @throws \LogicException
+     * @throws \Symfony\Component\Serializer\Exception\NotEncodableValueException
      */
     public function apply(Request $request, ParamConverter $configuration)
     {
         $class = $configuration->getClass();
 
-        $object = $this->serializer->deserialize(
-            $request->getContent(),
-            $class,
-            self::FORMAT
-        );
+        $object = $this->serializer->deserialize($request->getContent(), $class);
 
         $request->attributes->set($configuration->getName(), $object);
     }
