@@ -40,7 +40,10 @@ class JsonParamConverter implements ParamConverterInterface
     {
         $class = $configuration->getClass();
 
-        $object = $this->serializer->deserialize($request->getContent(), $class);
+        $object = $this->serializer->deserialize(
+            ($request->getContent() !== '') ? $request->getContent() : '{}',
+            $class
+        );
 
         $request->attributes->set($configuration->getName(), $object);
     }
